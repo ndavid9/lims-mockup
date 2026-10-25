@@ -1,0 +1,150 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DemoLab LIMS – PoC / AI UAT</title><link rel="stylesheet" href="style.css"></head>
+<body data-page="poc"><main id="main" data-testid="page-poc" class="poc">
+<div class="card"><h1 style="margin:0 0 6px;color:#123b5c" data-testid="poc-title">Proof of concept: AI-assisted UAT of a LIMS with Grok Bot</h1>
+<p class="small">Prepared for management · Food &amp; environmental testing · France &amp; Germany · Mock-up v1.3 · 25/10/2026</p>
+<div class="toc" data-testid="poc-toc"><a href="#s1">1 Summary</a><a href="#s2">2 What we did</a><a href="#s3">3 Results</a><a href="#s4">4 Open items</a><a href="#s5">5 Proven &amp; limits</a><a href="#s6">6 Scaling up</a><a href="#s7">7 Recommendation</a><a href="#ref">Annex</a></div></div>
+
+<section class="card" id="s1" data-testid="poc-s1"><h2>1. Executive summary</h2>
+<p>We built a clickable LIMS mock-up for a food and environmental testing lab with French and German sites. Grok Bot then ran user acceptance testing (UAT) on it in a real browser, the way a human tester would. In the final, screen-recorded run on v1.2, <b>all 8 test cases passed</b>. They covered registration, analysis with EU limit checks, four-eyes approval, COFRAC and DAkkS certificates, VAT and e-invoicing, client data separation and the audit trail.</p>
+<p>The earlier run found <b>8 defects (D1–D8)</b>. One was a data-integrity gap: a failed result could be approved and released without warning. These were fixed and the fixes confirmed in the clean run. That is the core of the proof: the bot executes, finds real problems, and leaves an evidence trail (screenshots, video, defect log).</p>
+<div class="ask" data-testid="poc-ask"><b>The ask:</b> approve a 4-week pilot of Grok Bot-executed UAT on one module of our real LIMS, in a non-production test environment. Humans write the test cases and make every sign-off decision.</div></section>
+
+<section class="card" id="s2" data-testid="poc-s2"><h2>2. What we did</h2>
+<div class="phase"><div><b>Step 1 – Research</b><br>Reviewed public vendor material for LabWare, STARLIMS, LabVantage, Thermo SampleManager, LabCollector, LDB, Eusoft.Lab, LABbase and CrelioHealth, and adopted their common features (see the Annex).</div>
+<div><b>Step 2 – Build the mock-up</b><br>A static web app with separate pages for Dashboard, Sample Registration, Analysis, Reports, Invoicing, Client Portal and Audit Trail. It covers the FR and DE sites, EU limits, COFRAC/DAkkS, EUR VAT and Factur-X/XRechnung. All data is fictional.</div>
+<div><b>Step 3 – UAT run 1 (v1.0)</b><br>8 scripted test cases. All executed with no blocking failures, and 8 defects were logged (D1–D8: 4 medium, 4 low).</div>
+<div><b>Step 4 – Fix (v1.1 → v1.2)</b><br>Fixed D1 and D3–D8, replaced browser pop-ups with in-page dialogs, and polished forms, certificates and the XML view.</div>
+<div><b>Step 5 – Clean run (v1.2)</b><br>Re-ran all 8 cases with real on-screen clicks, screen-recorded. All PASS.</div></div>
+<h3>Evidence video</h3>
+<video controls preload="metadata" src="media/LIMS_UAT_demo.mp4" data-testid="poc-video" id="poc-video"></video>
+<p class="small"><code>LIMS_UAT_demo.mp4</code> – the clean v1.2 run, 7 min 18 s, with title cards and captions (also shared separately). <a href="media/LIMS_UAT_demo.mp4" data-testid="poc-video-link" download>Download video</a></p></section>
+
+<section class="card" id="s3" data-testid="poc-s3"><h2>3. Clean-run results (v1.2, recorded)</h2><div class="tbl"><table data-testid="poc-results-table">
+<tr><th>Test case</th><th>What was checked</th><th>Result</th><th>Evidence</th></tr>
+<tr><td>TC1 Dashboard</td><td>Site switch FR ↔ DE shows only that site's samples; accreditation banner switches COFRAC ↔ DAkkS; language toggle translates the navigation</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC1</td></tr>
+<tr><td>TC2 Sample registration</td><td>Mandatory-field validation, sample ID generated, barcode label, receive, reject only with a reason</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC2</td></tr>
+<tr><td>TC3 Chain of custody</td><td>Signed custody transfer with temperature and seal check</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC3</td></tr>
+<tr><td>TC4 Analysis &amp; approval</td><td>Pass/fail against EU limits; four-eyes approval stops an analyst approving their own result; approving a failed E. coli result requires a written justification; e-signature</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC4</td></tr>
+<tr><td>TC5 Certificates</td><td>COFRAC (FR) and DAkkS (DE) certificates; "does not conform" statement shown for a failing result; release to client</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC5</td></tr>
+<tr><td>TC6 Invoicing</td><td>DE invoice €315.00 net + 19 % VAT = €374.85 gross · FR invoice €35.00 net + 20 % VAT = €42.00 gross · Belgian client INV-FR-2026-0398 under reverse charge, €220.00, marked Paid · Factur-X (FR) and XRechnung (DE) XML export</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC6</td></tr>
+<tr><td>TC7 Client portal</td><td>A client sees only its own samples and reports</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC7</td></tr>
+<tr><td>TC8 Audit trail</td><td>Actions logged with user, time, before/after values and reasons for change; filter</td><td><span class="pill s-PASS">PASS</span></td><td>Video – TC8</td></tr>
+</table></div>
+<h3>Defects from run 1 and status</h3><div class="tbl"><table data-testid="poc-defects-fixed">
+<tr><th>ID</th><th>Severity</th><th>Defect found by the bot</th><th>Status</th></tr>
+<tr><td>D1</td><td>Medium</td><td>Registration form kept the previous sample's test selections</td><td>Fixed</td></tr>
+<tr><td>D2</td><td>Low</td><td>Rejected sample still offers Label / CoC</td><td>Open (see section 4)</td></tr>
+<tr><td>D3</td><td>Medium</td><td>Disabled approve button looked active; no four-eyes message</td><td>Fixed</td></tr>
+<tr><td>D4</td><td>Medium</td><td>Failed result and QC deviation approved and released with no warning or justification</td><td>Fixed</td></tr>
+<tr><td>D5</td><td>Medium</td><td>Certificate showed pH limit 9.5 instead of 6.5–9.5</td><td>Fixed</td></tr>
+<tr><td>D6</td><td>Low</td><td>Receipt temperature missing on certificate; stray "Field:" text</td><td>Fixed</td></tr>
+<tr><td>D7</td><td>Low</td><td>No overall statement of conformity</td><td>Fixed</td></tr>
+<tr><td>D8</td><td>Low</td><td>E-invoice XML not well-formed</td><td>Fixed</td></tr></table></div></section>
+
+<section class="card" id="s4" data-testid="poc-s4"><h2>4. Defects and observations still open</h2><div class="tbl"><table data-testid="poc-open-table">
+<tr><th>Item</th><th>Type</th><th>Description</th><th>Real-system impact</th></tr>
+<tr><td>D2</td><td>Defect (low)</td><td>Rejected samples still offer the Label and CoC actions</td><td>Could let a rejected sample re-enter the workflow</td></tr>
+<tr><td>O1</td><td>Observation</td><td>A portal user can switch clients from the "preview as client" dropdown</td><td>Would be a data-separation / GDPR issue in production; access must be enforced server-side</td></tr>
+<tr><td>O2</td><td>Observation</td><td>Audit trail oddities: instrument name appears in the Reason column; both sites are mixed in one list</td><td>Ambiguous audit records during an inspection</td></tr>
+<tr><td>O3</td><td>Defect (low, UI)</td><td>The reject dialog's "required" error stays visible after a reason is typed</td><td>Confusing for users</td></tr>
+<tr><td>O4</td><td>Defect (low, UI)</td><td>The registration test list keeps its scroll position between samples</td><td>Risk of overlooking tests</td></tr>
+<tr><td>O5</td><td>Defect (low, UI)</td><td>The CoC dialog resizes after each entry</td><td>Cosmetic</td></tr></table></div>
+<div class="warnbox" data-testid="poc-slips"><b>Honest slips in the recording:</b> one extra custody row was added by a misclick, and a typo in the audit filter was corrected on screen. Both are visible in the video. Neither affected a test verdict, but they show why a human reviews the evidence.</div></section>
+
+<section class="card" id="s5" data-testid="poc-s5"><h2>5. What the PoC proves, and its limits</h2>
+<div class="row"><div><h3 style="color:#2e7d32">Proven</h3><ul>
+<li>The bot can drive a real web UI end to end like a human tester: clicks, typing, dialogs, role switches and site switches.</li>
+<li>It validates EU compliance logic: spec limits, four-eyes approval, conformity statements, VAT and reverse charge, e-invoice formats.</li>
+<li>It finds real defects, including a data-integrity gap (D4), and writes them up with reproduction steps.</li>
+<li>It produces evidence: screenshots, a captioned screen recording and a defect log.</li>
+<li>It re-runs the same suite after fixes, which is the basis for regression testing.</li></ul></div>
+<div><h3 style="color:#c62828">Limits</h3><ul>
+<li>This was our own mock-up, not the production LIMS or a vendor system. Real systems add logins, latency and complex screens.</li>
+<li>There was some timing lag; the bot is not faster than a person per click. The gain comes from unattended, repeatable runs.</li>
+<li>A human must still sign off on regulated validation (EU GMP Annex 11, ISO/IEC 17025 accreditation, GAMP 5 risk-based thinking). The bot produces evidence; it does not approve.</li>
+<li>All test data was synthetic, and only 8 test cases were run.</li>
+<li>The bot itself is not a validated tool. Its role in a CSV/CSA approach has to be assessed and documented.</li></ul></div></div></section>
+
+<section class="card" id="s6" data-testid="poc-s6"><h2>6. How to scale to the whole LIMS test</h2>
+<h3>6.1 Phased plan</h3><div class="phase" data-testid="poc-phases">
+<div><b>Phase 1 – Pilot (4 weeks)</b><br>One module of the real LIMS (suggested: Sample Registration and Chain of Custody) in a validated, non-production test environment. About 20 human-approved test cases. The bot executes them; QA reviews.</div>
+<div style="border-top-color:#5b8db8"><b>Phase 2 – Regression suite</b><br>Extend to all modules. Build a stable regression set and run it on a schedule (nightly or per release/patch), with evidence packs.</div>
+<div style="border-top-color:#9bbad6"><b>Phase 3 – Full UAT</b><br>The bot executes the full UAT script set for go-live or major upgrades. Humans do exploratory testing, scientific-judgement checks and formal sign-off.</div></div>
+<div class="row"><div><h3>6.2 Inputs we need</h3><ul data-testid="poc-inputs">
+<li>User requirements (URS) and a requirements traceability matrix</li><li>Approved test scripts: steps, data, expected results</li>
+<li>Test accounts for each role (reception, analyst, QA reviewer, manager, finance, client)</li>
+<li>A non-production environment with synthetic or anonymised, GDPR-safe data</li><li>Access to the defect tracker (bot drafts, human files or approves)</li></ul></div>
+<div><h3>6.3 What the bot delivers</h3><ul data-testid="poc-outputs">
+<li>Executed scripts with PASS/FAIL per step</li><li>Screenshots per checkpoint and video per test case</li>
+<li>Defect log with reproduction steps and evidence</li><li>Updated traceability matrix (requirement → test → result → evidence)</li><li>Run summary after each scheduled regression</li></ul></div></div>
+<h3>6.4 Governance and fit with CSV / CSA</h3><ul>
+<li>Every executed test is reviewed and signed by a named human reviewer. The bot never approves results, test outcomes or releases.</li>
+<li>The bot's own actions are logged: what it clicked and when, which build and account it used. Its evidence is kept as part of the validation record.</li>
+<li>The bot is treated as a test-execution aid in a risk-based CSA approach (GAMP 5, 2nd ed. thinking). Its fitness for purpose is documented in the validation plan, and high-risk functions (e-signature, audit trail, release) keep human witnessed testing.</li>
+<li>Production access is excluded, and only test data is used.</li></ul>
+<h3>6.5 Roles (RACI)</h3><div class="tbl"><table data-testid="poc-raci">
+<tr><th>Activity</th><th>QA / Validation lead</th><th>Lab SMEs (FR &amp; DE)</th><th>LIMS admin / IT</th><th>Grok Bot</th><th>Management sponsor</th></tr>
+<tr><td>Write and approve test scripts</td><td>A</td><td>R</td><td>C</td><td>C (drafts)</td><td>I</td></tr>
+<tr><td>Provide test environment, accounts, data</td><td>C</td><td>I</td><td>A/R</td><td>I</td><td>I</td></tr>
+<tr><td>Execute scripts, capture evidence</td><td>A</td><td>I</td><td>I</td><td>R</td><td>I</td></tr>
+<tr><td>Triage and log defects</td><td>A</td><td>R</td><td>R</td><td>R (drafts)</td><td>I</td></tr>
+<tr><td>Review evidence, sign off</td><td>A/R</td><td>R</td><td>C</td><td>–</td><td>I</td></tr>
+<tr><td>Go/no-go on scale-up</td><td>R</td><td>C</td><td>C</td><td>–</td><td>A</td></tr></table></div>
+<p class="small">R = Responsible, A = Accountable, C = Consulted, I = Informed.</p>
+<h3>6.6 Pilot success criteria and KPIs</h3>
+<p class="small"><b>All values below are proposed targets or assumptions, not measured results.</b> The pilot measures the real figures against a manual baseline.</p><div class="tbl"><table data-testid="poc-kpis">
+<tr><th>KPI</th><th>How measured</th><th>Proposed target (assumption)</th></tr>
+<tr><td>Coverage</td><td>Approved pilot test cases executed by the bot</td><td>≥ 90 % of ~20 cases</td></tr>
+<tr><td>Evidence quality</td><td>Evidence packs accepted by QA without re-execution</td><td>≥ 90 %</td></tr>
+<tr><td>Defects found</td><td>Valid defects raised by the bot and confirmed by QA</td><td>Report count; no target</td></tr>
+<tr><td>False failures</td><td>Bot FAILs that were bot or timing errors, not real defects</td><td>≤ 10 % of failures</td></tr>
+<tr><td>Cycle time</td><td>Elapsed time for a full regression run vs the manual baseline</td><td>Measure; aim for a clear reduction</td></tr>
+<tr><td>Re-run cost</td><td>Human hours per regression re-run (review only vs manual execution)</td><td>Measure; aim for a clear reduction</td></tr>
+<tr><td>Script maintenance</td><td>Hours to adapt scripts after a LIMS UI change</td><td>Measure</td></tr></table></div>
+<h3>6.7 Risks and mitigations</h3><div class="tbl"><table data-testid="poc-risks">
+<tr><th>Risk</th><th>Mitigation</th></tr>
+<tr><td>Regulatory acceptance of bot-executed evidence</td><td>Human review and sign-off of every test; document the bot's role in the validation plan; keep witnessed testing for high-risk functions</td></tr>
+<tr><td>Data protection (GDPR)</td><td>Non-production environment only; synthetic or anonymised data; no real client or personal data</td></tr>
+<tr><td>Access and security</td><td>Dedicated least-privilege test accounts; no production credentials; access revoked after runs</td></tr>
+<tr><td>Flaky runs (timing lag, slow screens)</td><td>Explicit waits, retry rules, and a false-failure KPI; stable test ids requested from the vendor</td></tr>
+<tr><td>UI changes break scripts</td><td>Track maintenance effort; tests keyed to stable ids and labels, not screen positions</td></tr>
+<tr><td>Over-reliance on automation</td><td>Keep human exploratory testing and SME review of scientific logic (limits, decision rules)</td></tr>
+<tr><td>Bot errors in evidence (e.g. misclicks)</td><td>Video and screenshots let reviewers spot slips; any affected step is re-run</td></tr></table></div>
+<h3>6.8 Timeline (indicative)</h3>
+<p class="small">Weeks from pilot approval. Phases 2–3 depend on the go/no-go decision in week 4.</p>
+<div class="gantt" data-testid="poc-gantt"><div></div><div class="h">W1</div><div class="h">W2</div><div class="h">W3</div><div class="h">W4</div><div class="h">W5</div><div class="h">W6</div><div class="h">W7</div><div class="h">W8</div><div class="h">W9</div><div class="h">W10</div><div class="h">W11</div><div class="h">W12</div><div class="h">W13</div><div class="h">W14</div><div class="h">W15</div><div class="h">W16</div><div>Pilot: set-up (scope, scripts, env, accounts)</div><div class="g " title="Pilot: set-up (scope, scripts, env, accounts): week 1–1"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>Pilot: bot execution + defect triage</div><div></div><div class="g " title="Pilot: bot execution + defect triage: week 2–3"></div><div class="g " title="Pilot: bot execution + defect triage: week 2–3"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>Pilot: review, KPIs, go/no-go</div><div></div><div></div><div></div><div class="g m" title="Pilot: review, KPIs, go/no-go: week 4–4"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>Regression suite: build & baseline</div><div></div><div></div><div></div><div></div><div class="g b" title="Regression suite: build & baseline: week 5–8"></div><div class="g b" title="Regression suite: build & baseline: week 5–8"></div><div class="g b" title="Regression suite: build & baseline: week 5–8"></div><div class="g b" title="Regression suite: build & baseline: week 5–8"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>Scheduled regression runs</div><div></div><div></div><div></div><div></div><div></div><div></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div class="g b" title="Scheduled regression runs: week 7–16"></div><div>Full UAT: all modules, bot-executed</div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="g c" title="Full UAT: all modules, bot-executed: week 11–15"></div><div class="g c" title="Full UAT: all modules, bot-executed: week 11–15"></div><div class="g c" title="Full UAT: all modules, bot-executed: week 11–15"></div><div class="g c" title="Full UAT: all modules, bot-executed: week 11–15"></div><div class="g c" title="Full UAT: all modules, bot-executed: week 11–15"></div><div></div><div>Human review & UAT sign-off</div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="g m" title="Human review & UAT sign-off: week 16–16"></div></div>
+<p class="small">■ dark = pilot · ■ mid = regression · ■ light = full UAT · ■ green = decision / sign-off milestone</p></section>
+
+<section class="card" id="s7" data-testid="poc-s7"><h2>7. Recommendation and next steps</h2>
+<p>The PoC shows that Grok Bot can execute LIMS UAT through the real user interface, check EU and accreditation-relevant logic, catch genuine defects, and produce an audit-friendly evidence pack. It does not replace human validation, and the mock-up result does not yet prove time or cost savings. A controlled pilot on the real LIMS is the right next step to measure those.</p>
+<div class="ask"><b>Recommendation:</b> approve a 4-week pilot of bot-executed UAT on one module of the real LIMS, under QA ownership, in a non-production environment.</div>
+<ol data-testid="poc-next-steps"><li>Management approves the pilot and names a sponsor and a QA/validation lead.</li>
+<li>IT provides the test environment, role-based test accounts and synthetic data.</li>
+<li>QA and lab SMEs (FR and DE) approve about 20 test cases for the chosen module.</li>
+<li>Grok Bot executes them, delivers the evidence pack, defect log and traceability matrix, and QA reviews.</li>
+<li>Week 4: review KPIs against the manual baseline and make a go/no-go decision on the regression suite and full UAT.</li></ol></section>
+
+<section class="card" id="ref" data-testid="poc-annex"><h2>Annex – Reusable scope from the mock-up</h2>
+<h3>A. Regulatory scope covered (EU, France, Germany)</h3><div class="tbl"><table data-testid="poc-reg-table">
+<tr><th>Area</th><th>References used in the mock-up</th></tr>
+<tr><td>Food</td><td>Reg. (EC) 178/2002 (general food law); Reg. (EC) 2073/2005 (microbiological criteria); Reg. (EC) 396/2005 (pesticide MRLs); Reg. (EU) 2023/915 (contaminants, e.g. mycotoxins); Reg. (EU) 1169/2011 (nutrition labelling)</td></tr>
+<tr><td>Water &amp; environment</td><td>Drinking Water Directive (EU) 2020/2184; Urban Wastewater Treatment Directive 91/271/EEC (BOD5, COD, TSS); Water Framework Directive; Ambient Air Quality Directive (PM10, PM2.5)</td></tr>
+<tr><td>Quality &amp; data integrity</td><td>ISO/IEC 17025 via COFRAC (FR) and DAkkS (DE); EU GMP Annex 11 / 21 CFR Part 11-style e-signature and audit trail; GDPR</td></tr>
+<tr><td>Invoicing</td><td>EUR; VAT FR 20 % / DE 19 % (reduced rates configurable); intra-EU B2B reverse charge (Art. 196 Dir. 2006/112/EC); EN 16931 e-invoicing: Factur-X and the French e-invoicing mandate, German XRechnung / ZUGFeRD</td></tr></table></div>
+<p class="small">The spec limits in the mock-up are indicative and must be verified against the current legal texts before any real use.</p>
+<h3>B. Features adopted from external LIMS products</h3><div class="tbl"><table data-testid="poc-vendor-table">
+<tr><th>Feature</th><th>Seen in (vendor material, not independently verified)</th><th>In mock-up</th></tr>
+<tr><td>Barcode labels &amp; sample tracking</td><td>LabVantage, LabCollector, CrelioHealth</td><td>Label preview, scan lookup, status pipeline</td></tr>
+<tr><td>Chain of custody</td><td>STARLIMS, LabWare; field eCOC practice (Lab Manager)</td><td>Field GPS, receipt temperature, seal check, signed transfers</td></tr>
+<tr><td>Instrument integration</td><td>LabWare, LabVantage, Thermo SampleManager</td><td>Simulated import, calibration lock</td></tr>
+<tr><td>Audit trail &amp; e-signatures</td><td>LabWare, Eusoft.Lab, LabVantage, LDB, LABbase</td><td>Append-only trail with reasons; e-sign with four-eyes check</td></tr>
+<tr><td>Spec-limit checks</td><td>LDB, environmental LIMS guides</td><td>PASS/FAIL vs EU references</td></tr>
+<tr><td>Client portal</td><td>LDB, Eusoft.Lab, CrelioHealth</td><td>Client-scoped view and requests</td></tr>
+<tr><td>Billing / e-invoicing</td><td>LDB (e-bill), CrelioHealth (price lists, invoices)</td><td>VAT, reverse charge, EN 16931 XML</td></tr></table></div>
+<h3>C. Sources</h3><ul class="small" data-testid="poc-sources">
+<li><a href="https://www.labware.com/lims">labware.com/lims</a> · <a href="https://www.labware.com/blog/21-cfr-part-11">LabWare 21 CFR Part 11</a> · <a href="https://www.labware.com/lims/integration">LabWare integrations</a></li>
+<li><a href="https://www.starlims.com/wp-content/uploads/2024/07/biorepository-lims-spec-document.pdf">STARLIMS biorepository spec</a> · <a href="https://www.labvantage.com/informatics/lims/">LabVantage LIMS</a> · <a href="https://www.labvantage.com/industries/food-beverage/">LabVantage Food &amp; Beverage</a></li>
+<li><a href="https://www.thermofisher.com/us/en/home/digital-solutions/lab-informatics/lab-information-management-systems-lims/solutions/samplemanager.html">Thermo SampleManager</a> · <a href="https://labcollector.com/labcollector-lims/features/">LabCollector</a> · <a href="https://lims.eu/en/eco">LDB</a> · <a href="https://www.eusoft.co.uk/environmental-laboratories/">Eusoft.Lab</a> · <a href="https://gus-lab.com/en/software-lims/labbase/">LABbase</a> · <a href="https://creliohealth.com/in/lims/lims-software/cloud-based-lims">CrelioHealth</a></li>
+<li><a href="https://www.labmanager.com/environmental-lab-lims-chain-of-custody-automation-for-field-sample-compliance-35513">Lab Manager – environmental chain of custody</a> · <a href="https://cloudlims.com/the-5-best-lims-for-environmental-testing-labs-in-2026/">CloudLIMS – environmental LIMS 2026</a></li></ul>
+<p class="small">All clients, samples, results and invoices in this mock-up are fictional. The mock-up is not a validated system.</p></section>
+</main><script src="data.js"></script><script src="app.js"></script></body></html>
